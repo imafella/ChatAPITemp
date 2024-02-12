@@ -1,0 +1,825 @@
+swagger: "2.0"
+info:
+  description: "Swagger doc for activity queue queue"
+  version: "1.0.0"
+  title: "Swagger Activity Queue"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "tyler.max.bennett@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "127.0.0.1"
+basePath: "/api/v1"
+tags:
+- name: "Chat"
+  description: "Everything about Chats"
+- name: "User"
+  description: "Access to Users"
+- name: "Reactions"
+  description: "Access to Users"
+- name: "Messages"
+  description: "Access to Users"
+
+schemes:
+- "https"
+- "http"
+paths:
+  /chat:
+    get:
+      tags:
+      - "Chat"
+      summary: "Get all chats"
+      description: "Returns an array of chats that the user is involved in along with a preview of the last message."
+      produces:
+      - "application/json"
+      parameters:
+      - in: "header"
+        name: "user"
+        required: true
+        type: "string"
+      - name: "offset"
+        in: "query"
+        required: false
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        required: false
+        type: "integer"
+      responses:
+        "200":
+          description: "Found Chats, This covers 404 as no chats found is a valid response."
+          schema:
+            $ref: "#/definitions/ChatPreviews"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+    post:
+      tags:
+      - "Chat"
+      summary: "Post a new Chat"
+      description: "See Summary"
+      consumes:
+      - "application/json"
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ChatPostBody"
+
+      responses:
+        201:
+          description: "Created Chat"
+          schema:
+            $ref: "#/definitions/Chat"
+        "400":
+          description: "Bad Request."
+        "404":
+          description: "Could not find user."
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+  /chat/{ChatId}:
+    get:
+      tags:
+      - "Chat"
+      summary: "Gets all the messages of ChatId"
+      description: "See Summary"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "offset"
+        in: "query"
+        required: false
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        required: false
+        type: "integer"
+      responses:
+        "200":
+          description: "Found Chat."
+          schema:
+            $ref: "#/definitions/Chat"
+        "404":
+          description: "Chat not found"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+    delete:
+      tags:
+      - "Chat"
+      summary: "Deletes the chat of ChatId"
+      description: "See Summary"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      responses:
+        "200":
+          description: "Deleted Chat."
+        "404":
+          description: "Chat not found"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+    patch:
+      tags:
+      - "Chat"
+      summary: "Patches details of chat. Chatname or Users involved."
+      description: "See Summary"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ChatPatchInput"
+      responses:
+        "200":
+          description: "Found Chat."
+          schema:
+            $ref: "#/definitions/Chat"
+        "404":
+          description: "Chat not found"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+
+  /chat/{ChatId}/message:
+    get:
+      tags:
+      - "Messages"
+      summary: "Gets all messages in chat."
+      description: "See Summary"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      responses:
+        "200":
+          description: "Created Message"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+    post:
+      tags:
+      - "Messages"
+      summary: "Posts a new message to chat."
+      description: "See Summary"
+      consumes:
+      - "application/json"
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      responses:
+        "201":
+          description: "Created Message"
+          schema:
+            $ref: "#/definitions/Chat"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+  /message/{MessageId}:
+    patch:
+      tags:
+      - "Messages"
+      summary: "Patches an existing message."
+      description: "See Summary"
+      consumes:
+      - "application/json"
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "MessageId"
+        in: "path"
+        type: "string"
+        required: true
+      responses:
+        200:
+          description: "Patched Message"
+          schema:
+            $ref: "#/definitions/Chat"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+    delete:
+      tags:
+      - "Messages"
+      summary: "Deletes an existing message."
+      description: "See Summary"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "MessageId"
+        in: "path"
+        type: "string"
+        required: true
+      responses:
+        "200":
+          description: "Deleted Message"
+          schema:
+            $ref: "#/definitions/Chat"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+  /message/{MessageId}/reaction:
+    post:
+      tags:
+      - "Reactions"
+      summary: "Posts a reaction to the Message in question"
+      description: "See Summary"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "MessageId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Reaction"
+      responses:
+        "201":
+          description: "Posted Reaction"
+          schema:
+            $ref: "#/definitions/Chat"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+    get:
+      tags:
+      - "Reactions"
+      summary: "Gets reactions for an existing message."
+      description: "See Summary"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "MessageId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "offset"
+        in: "query"
+        required: false
+        type: "integer"
+      - name: "limit"
+        in: "query"
+        required: false
+        type: "integer"
+      responses:
+        "200":
+          description: "Posted Reaction"
+          schema:
+            $ref: "#/definitions/Reactions"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+  /reaction/{ReactionId}:
+    patch:
+      tags:
+      - "Reactions"
+      summary: "Patches an existing Reaction."
+      description: "See Summary"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "MessageId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "ReactionId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Reaction"
+      responses:
+        "201":
+          description: "Posted Reaction"
+          schema:
+            $ref: "#/definitions/Chat"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+    delete:
+      tags:
+      - "Reactions"
+      summary: "Deletes an existing reaction from a message."
+      description: "See Summary"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ChatId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "MessageId"
+        in: "path"
+        type: "string"
+        required: true
+      - name: "ReactionId"
+        in: "path"
+        type: "string"
+        required: true
+      responses:
+        "200":
+          description: "Deleted Reaction"
+          schema:
+            $ref: "#/definitions/Chat"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+  /user:
+    get:
+      tags:
+      - "User"
+      summary: "Gets list of existing users."
+      description: "See Summary"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "search"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "offset"
+          in: "query"
+          required: false
+          type: "integer"
+        - name: "limit"
+          in: "query"
+          required: false
+          type: "integer"
+      responses:
+        "200":
+          description: "Get Users"
+          schema:
+            $ref: "#/definitions/Users"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+    post:
+      tags:
+      - "User"
+      summary: "Posts a new user."
+      description: "See Summary"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "body"
+          name: "user"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "201":
+          description: "Posts User"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+  /user/{UserId}:
+    get:
+      tags:
+      - "User"
+      summary: "Gets an existing User."
+      description: "See Summary"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "UserId"
+          in: "path"
+          type: "string"
+          required: true
+      responses:
+        "200":
+          description: "Gets User"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+    patch:
+      tags:
+      - "User"
+      summary: "Patches an existing User."
+      description: "See Summary"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "body"
+          name: "username"
+          required: false
+          schema:
+            $ref: "#/definitions/UserPatchBody"
+        - name: "UserId"
+          in: "path"
+          type: "string"
+          required: true
+      responses:
+        "200":
+          description: "Patched User"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+    delete:
+      tags:
+      - "User"
+      summary: "Deletes an existing user."
+      description: "See Summary"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "UserId"
+          in: "path"
+          type: "string"
+          required: true
+      responses:
+        "200":
+          description: "Patched User"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+  /user/{UserId}/chat:
+    get:
+      tags:
+      - "User"
+      summary: "Gets existing messages involving user."
+      description: "See Summary"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "UserId"
+          in: "path"
+          type: "string"
+          required: true
+        - name: "search"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "offset"
+          in: "query"
+          required: false
+          type: "integer"
+        - name: "limit"
+          in: "query"
+          required: false
+          type: "integer"
+      responses:
+        "200":
+          description: "Got User chats"
+          schema:
+            $ref: "#/definitions/ChatPreviews"
+        "500":
+          description: "Internal Server Error"
+        "502":
+          description: "Bad Gateway"
+        "503":
+          description: "Service Unavailable"
+        "504":
+          description: "Gateway Timeout"
+
+
+securityDefinitions:
+  chat_auth:
+    type: "oauth2"
+    authorizationUrl: "http://foo.bar/oauth/"
+    flow: "implicit"
+    scopes:
+      write:message: "Modify messages from your account"
+      read:chat: "read your chats"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+
+definitions:
+  DateTime:
+    type: "string"
+    description: "Date and time of message"
+  ChatPreview:
+    type: "object"
+    required:
+    - "ChatId"
+    - "Users"
+    - "LastMessage"
+    properties:
+      ChatId:
+        $ref: "#/definitions/ChatId"
+      Users:
+        type: "array"
+        description: "People involved in chat"
+        items:
+          $ref: "#/definitions/User"
+      LastMessage:
+        type: "object"
+        description: "The last message in a chat"
+        required:
+        - "Message"
+        properties:
+          Message:
+            $ref: "#/definitions/Message"
+      ChatName:
+        type: "string"
+        description: "The name of a chat"
+        example: "Boogie Bois"
+  Chat:
+    type: "object"
+    required:
+    - "ChatId"
+    - "Users"
+    - "Messages"
+    properties:
+      ChatId:
+        $ref: "#/definitions/ChatId"
+      Users:
+        type: "array"
+        description: "People involved in chat"
+        items:
+          $ref: "#/definitions/User"
+      Messages:
+        type: "array"
+        description: "The last message in a chat"
+        items:
+          $ref: "#/definitions/Message"
+      ChatName:
+        type: "string"
+        description: "The name of a chat"
+        example: "Boogie Bois"
+  Chats:
+    type: "array"
+    items:
+      $ref: "#/definitions/Chat"
+  ChatPreviews:
+    type: "array"
+    items:
+      $ref: "#/definitions/ChatPreview"
+  User:
+    type: "string"
+    example: "Tyler@anEmailDomain.com"
+  Users:
+    type: "array"
+    items:
+      $ref: "#/definitions/User"
+  Message:
+    type: "object"
+    description: Individual messages
+    required:
+    - "MessageId"
+    - "User"
+    - "Reactions"
+    - "MessageBody"
+    - "DateTime"
+    properties:
+      MessageId:
+        $ref: "#/definitions/MessageId"
+      MessageBody:
+        type: "string"
+      User:
+        $ref: "#/definitions/User"
+      Reactions:
+        type: "array"
+        description: "The Reactions"
+        items:
+          $ref: "#/definitions/Reaction"
+      DateTime:
+        $ref: "#/definitions/DateTime"
+      media:
+        type: "object"
+      mediaType:
+        type: "string"
+  ChatId:
+        type: "string"
+        description: "The Id of the chat that this message is in"
+        example: "12354984"
+  Reactions:
+    type: "object"
+    description: "Array of reactions from users"
+    required:
+    - "MessageId"
+    - "ReactionsArray"
+    properties:
+      MessageId:
+        $ref: "#/definitions/MessageId"
+      ReactionsArray:
+        type: "array"
+        description: "Array of all reactions on the message"
+        items:
+          $ref: "#/definitions/Reaction"
+  Reaction:
+    type: "object"
+    description: "The reaction for messages"
+    required:
+      - "UserId"
+      - "MessageId"
+      - "Symbol"
+    properties:
+      UserId:
+        $ref: "#/definitions/User"
+      MessageId:
+        $ref: "#/definitions/MessageId"
+      Symbol:
+        type: "string"
+        description: "The emoji"
+        example: ">:)"
+  MessageId:
+        type: "string"
+        description: "The Id of the Message that this message has, can be null in the place of a post"
+        example: "987654321"
+  ChatPatchInput:
+    type: "object"
+    description: "The Body of a Chat Patch"
+    properties:
+      ChatName:
+        type: "string"
+        description: "The name of the chat"
+        example: "BoogerBois"
+      Users:
+        type: "array"
+        description: "The Users of the chat"
+        items:
+          $ref: "#/definitions/User"
+  UserPatchBody:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        description: "The name of the chat"
+        example: "Bois"
+      email:
+        type: "string"
+        description: "The name of the chat"
+        example: "Bois@email.co"
+      isAdmin:
+        type: "boolean"
+        description: "if user is admin"
+        example: "false"
+  ChatPostBody:
+    type: "object"
+    properties:
+      users:
+        type: "array"
+        description: "list of users"
+        items:
+          type: "string"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+

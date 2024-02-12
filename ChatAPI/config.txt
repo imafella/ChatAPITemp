@@ -1,0 +1,8 @@
+[DatabaseDetails]
+user = chatApiAdmin
+password = chatApiAdminPassword
+host = localhost
+database = chatapi
+
+
+

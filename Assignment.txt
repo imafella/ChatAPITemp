@@ -1,0 +1,37 @@
+Design and develop conversation APIs for a real-time chat platform.
+
+Guidelines:
+- APIs should be designed with following requirements in mind:
+    - one-on-one chat between users
+    - group chats
+    - multimedia messages
+    - reaction to messages
+    - editing/deleting a message
+    - view past messages of a chat 
+    - Add/remove participants in a group chat
+
+- You are not required to develop UI/client for this API server.
+- Ensure to adhere to coding standards and best practices for maintainability, security and scalability.
+- Feel free to incorporate any creative elements that you deem essential but are not mentioned as a requirement in this assessment
+- Please document your code and explain your approach
+- Include notes about any limitations of your approach and how you could improve it further if you had more time to work on it.
+
+Submission Guidelines:
+- Please create a Github repository, push the code and documentation and share the link with us.
+
+
+Disclaimer:
+
+Kitco is not liable for any data loss or compromised files during this assignment's completion or submission. You are responsible for your work's security and integrity. This assignment is solely for job role evaluation and must not be shared, distributed, or published in any form. Breaching this confidentiality may lead to immediate disqualification. Ensure your submission is free from malicious content, as any harmful elements will result in immediate disqualification. You are also responsible for ensuring your submission does not contain sensitive information, including secrets or API keys. By submitting, you agree to these terms and conditions, and any violation may result in immediate disqualification and potential legal action.
+
+Wants:
+    Pagination for all Gets
+    Basic Auth
+    Good error handling
+    Unit Testing
+
+Assumptions:
+    Some Database exists for Users
+    Some Database exists for Chats
+    Some Database exists for Messages
+    Some Database exists for Reactions
